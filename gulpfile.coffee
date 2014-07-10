@@ -2,6 +2,8 @@ gulp = require 'gulp'
 chalk = require 'chalk'
 gbump = require 'gulp-bump'
 coffee = require 'gulp-coffee'
+connect = require 'gulp-connect'
+open = require 'open'
 
 yargs = require 'yargs'
   .wrap 80
@@ -20,12 +22,23 @@ log.error = (plugin, error) ->
 
 
 gulp.task 'build', ->
-  gulp.src './src/ReactComponentPlugin.coffee'
+  gulp.src './src/**/*.coffee'
     .pipe coffee bare: true
     .on 'error', (error) ->
       log.error 'coffee', error
       @end()
     .pipe gulp.dest '.'
+    .pipe connect.reload()
+
+
+gulp.task 'build:tests', ->
+  gulp.src './test/**/*.coffee'
+    .pipe coffee bare: true
+    .on 'error', (error) ->
+      log.error 'coffee', error
+      @end()
+    .pipe gulp.dest './test/'
+    .pipe connect.reload()
 
 
 gulp.task 'bump', ->
@@ -77,9 +90,29 @@ gulp.task 'bump', ->
     .pipe gulp.dest './'
 
 
-gulp.task 'test', ->
-  throw new Error 'no tests yet!'
+# A server for the test page
+gulp.task 'testserver', ->
+  connect.server opts =
+    root: __dirname
+    host: 'localhost'
+    port: 1337
+    livereload: true
+  url = "http://#{opts.host}:#{opts.port}/test/index.html"
+  browser = 'Google Chrome'
+  open url, browser, (error) ->
+    if error
+      log.error 'open', error
+    else
+      log 'open', "Opened #{chalk.magenta url} in #{chalk.green browser}"
+      file: 'index.html'
+
+
+gulp.task 'test', ['build', 'build:tests', 'testserver']
 
 
 gulp.task 'watch', ->
-  gulp.watch './src/**/*.?(lit)coffee', ['build']
+  gulp.watch './src/**/*.coffee', ['build']
+  gulp.watch './test/**/*.coffee', ['build:tests']
+
+
+gulp.task 'dev', ['test', 'watch']
