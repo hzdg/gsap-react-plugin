@@ -1,0 +1,36 @@
+{
+  "name": "gsap-react-component-plugin",
+  "version": "1.0.0",
+  "description": "A GSAP plugin for tweening React.js component state.",
+  "main": "ReactComponentPlugin.js",
+  "scripts": {
+    "prepublish": "gulp build",
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hzdg/gsap-react-component-plugin.git"
+  },
+  "keywords": [
+    "Greensock",
+    "GSAP",
+    "TweenLite",
+    "TweenMax",
+    "React",
+    "plugin"
+  ],
+  "author": "Eric Eldredge <lettertwo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hzdg/gsap-react-component-plugin/issues"
+  },
+  "homepage": "https://github.com/hzdg/gsap-react-component-plugin",
+  "devDependencies": {
+    "coffee-script": "^1.7.1",
+    "yargs": "^1.2.6",
+    "chalk": "^0.5.1",
+    "gulp-coffee": "^2.0.1",
+    "gulp-bump": "^0.1.10",
+    "gulp": "^3.8.6"
+  }
+}
