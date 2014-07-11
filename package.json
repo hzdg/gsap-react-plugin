@@ -1,15 +1,15 @@
 {
-  "name": "gsap-react-component-plugin",
+  "name": "gsap-react-plugin",
   "version": "1.0.0",
   "description": "A GSAP plugin for tweening React.js component state.",
-  "main": "ReactComponentPlugin.js",
+  "main": "ReactPlugin.js",
   "scripts": {
     "prepublish": "gulp build",
     "test": "gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/hzdg/gsap-react-component-plugin.git"
+    "url": "git://github.com/hzdg/gsap-react-plugin.git"
   },
   "keywords": [
     "Greensock",
@@ -22,9 +22,9 @@
   "author": "Eric Eldredge <lettertwo@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hzdg/gsap-react-component-plugin/issues"
+    "url": "https://github.com/hzdg/gsap-react-plugin/issues"
   },
-  "homepage": "https://github.com/hzdg/gsap-react-component-plugin",
+  "homepage": "https://github.com/hzdg/gsap-react-plugin",
   "devDependencies": {
     "coffee-script": "^1.7.1",
     "yargs": "^1.2.6",

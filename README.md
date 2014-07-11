@@ -1,5 +1,5 @@
-ReactComponentPlugin
-====================
+GSAP React Plugin
+=================
 
 A [GSAP] plugin for tweening [React.js] component state.
 

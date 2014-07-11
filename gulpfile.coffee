@@ -45,7 +45,7 @@ gulp.task 'build:tests', ->
 gulp.task 'bump', ['bump:packagemeta'], ->
   delete require.cache[require.resolve './package.json']
   {version} = require './package.json'
-  gulp.src ['./src/ReactComponentPlugin.coffee']
+  gulp.src ['./src/ReactPlugin.coffee']
     .pipe replace /version: '[\w\.\-]+'/g, "version: '#{ version }'"
     .pipe gulp.dest './src/'
 
