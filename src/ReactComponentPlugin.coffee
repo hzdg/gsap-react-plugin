@@ -27,19 +27,26 @@ window._gsQueue.push ->
       return false unless typeof target.setState is 'function'
       # Keep a reference to the target so we can call `setState()` on update.
       @_target = target
-      # We actually tween properties on a proxy for component state.
-      @_proxy = {}
+      # We tween a proxy so that multiple tweens on the same target can
+      # change state props independently of the React render loop.
+      @_proxy = target._tweenState ?= {}
+      # Store start and end values.
+      [@_start, @_end] = [{}, {}]
       # For each state prop being tweened...
       for own p of value
-        # Populate our proxy object with the initial value for this state prop.
-        @_proxy[p] = start = target.state[p]
-        # Create a tween on our proxy for this state prop.
-        @_addTween @_proxy, p, start, value[p], p
+        # Populate the proxy, start and end stores.
+        @_end[p] = end = value[p]
+        @_start[p] = start = @_proxy[p] ? @_proxy[p] = target.state?[p] ? end
+        # Add a tween to the proxy for this prop.
+        @_addTween @_proxy, p, start, end, p
       true
     set: (ratio) ->
-      # Call the super set to make sure our proxy tweens update.
+      # Call super set to make sure the proxy tweens are updated.
       @_super.setRatio.call this, ratio
       # Call `setState()` on our target component.
-      @_target.setState @_proxy
+      @_target.setState switch ratio
+        when 0 then @_start
+        when 1 then @_end
+        else @_proxy
 
 if window._gsDefine then window._gsQueue.pop()()
