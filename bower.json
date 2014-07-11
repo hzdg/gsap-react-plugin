@@ -2,7 +2,7 @@
   "name": "gsap-react-plugin",
   "version": "1.0.0",
   "description": "A GSAP plugin for tweening React.js component state.",
-  "main": "ReactPlugin.js",
+  "main": "gsap-react-plugin.js",
   "keywords": [
     "Greensock",
     "GSAP",
