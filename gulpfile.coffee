@@ -4,6 +4,7 @@ gbump = require 'gulp-bump'
 coffee = require 'gulp-coffee'
 connect = require 'gulp-connect'
 open = require 'open'
+replace = require 'gulp-replace'
 
 yargs = require 'yargs'
   .wrap 80
@@ -41,7 +42,15 @@ gulp.task 'build:tests', ->
     .pipe connect.reload()
 
 
-gulp.task 'bump', ->
+gulp.task 'bump', ['bump:packagemeta'], ->
+  delete require.cache[require.resolve './package.json']
+  {version} = require './package.json'
+  gulp.src ['./src/ReactComponentPlugin.coffee']
+    .pipe replace /version: '[\w\.\-]+'/g, "version: '#{ version }'"
+    .pipe gulp.dest './src/'
+
+
+gulp.task 'bump:packagemeta', ->
   argv = yargs
     .usage '''
 
