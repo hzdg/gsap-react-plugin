@@ -24,5 +24,16 @@ React.createClass({
 });
 ```
 
+
+Installation
+------------
+
+- Via [npm]: `npm install gsap-react-plugin`
+- Via [bower]: `bower install gsap-react-plugin`
+- Via file > save as: [ReactPlugin.js]
+
 [GSAP]: http://www.greensock.com/gsap-js/
 [React.js]: http://facebook.github.io/react/
+[npm]: http://npmjs.org
+[bower]: http://bower.io
+[ReactPlugin.js]: https://raw.githubusercontent.com/hzdg/gsap-react-plugin/master/ReactPlugin.js
