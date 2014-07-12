@@ -22,7 +22,7 @@ spy = (original) ->
   fn
 
 
-describe 'ReactComponentPlugin', ->
+describe 'gsap-react-plugin', ->
   component = null
 
   assertStartState = (expected) ->
