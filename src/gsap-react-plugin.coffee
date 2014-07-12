@@ -21,7 +21,7 @@ window._gsQueue.push ->
   window._gsDefine.plugin
     propName: 'state'
     API: 2
-    version: '1.0.0'
+    version: '1.0.1'
     init: (target, value, tween) ->
       # If the target doesn't look like a React component, don't initialize.
       return false unless typeof target.setState is 'function'
