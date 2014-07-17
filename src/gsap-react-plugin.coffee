@@ -25,28 +25,30 @@ window._gsQueue.push ->
     init: (target, value, tween) ->
       # If the target doesn't look like a React component, don't initialize.
       return false unless typeof target.setState is 'function'
-      # Keep a reference to the target so we can call `setState()` on update.
-      @_target = target
-      # We tween a proxy so that multiple tweens on the same target can
-      # change state props independently of the React render loop.
-      @_proxy = target._tweenState ?= {}
-      # Store start and end values.
-      [@_start, @_end] = [{}, {}]
+      # We create a synchronous state proxy (if it doesn't already exist) so
+      # that multiple tweens on the same target can change state props
+      # independently of the React render loop.
+      target._tweenState ?= {}
+      # We tween an internal proxy for state and synchronize its values with the
+      # shared state (target._tweenState and target.state) on update.
+      @_tween = {}
       # For each state prop being tweened...
       for own p of value
-        # Populate the proxy, start and end stores.
-        @_end[p] = end = value[p]
-        @_start[p] = start = @_proxy[p] ? @_proxy[p] = target.state?[p] ? end
-        # Add a tween to the proxy for this prop.
-        @_addTween @_proxy, p, start, end, p
+        # Figure out the start and end values.
+        end = value[p]
+        start = target.state?[p] ? target._tweenState[p] ? end
+        # Add a tween for this prop.
+        @_tween[p] = start
+        @_addTween @_tween, p, start, end, p
+      # Keep a reference to the target so we can call `setState()` on update.
+      @_target = target
       true
     set: (ratio) ->
-      # Call super set to make sure the proxy tweens are updated.
+      # Call super set to make sure the internal proxy tweens update.
       @_super.setRatio.call this, ratio
+      # Update our shared synchronous state proxy on our target component.
+      @_target._tweenState[k] = v for k, v of @_tween
       # Call `setState()` on our target component.
-      @_target.setState switch ratio
-        when 0 then @_start
-        when 1 then @_end
-        else @_proxy
+      @_target.setState @_tween
 
 if window._gsDefine then window._gsQueue.pop()()

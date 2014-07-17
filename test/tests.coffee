@@ -25,31 +25,38 @@ spy = (original) ->
 describe 'gsap-react-plugin', ->
   component = null
 
-  assertStartState = (expected) ->
-    assert.deepEqual component._tweenState, expected
+  assertState = (expected) ->
+    assert.deepEqual expected, component._tweenState
     assert component.setState.calledWith expected
-
-  assertEndState = (expected, done) ->
-    assert.deepEqual component._tweenState, expected
-    assert component.setState.calledWith expected
-    done()
 
   beforeEach -> component = setState: spy()
 
   it 'calls setState on a React component', (done) ->
-    TweenLite.set component, state: test: 1
-    assertEndState test: 1, done
+    TweenLite.set component,
+      state: test: 1
+      onComplete: ->
+        assertState test: 1
+        TweenLite.set component,
+          state: test: 0
+          onComplete: ->
+            done assertState test: 0
 
   it 'uses current state as initial value', (done) ->
     component.state = test: 0
     TweenLite.to component, 0.01,
       state: {test: 1}
-      immediateRender: true
-      onStart: -> assertStartState test: 0
-      onComplete: -> assertEndState test: 1, done
+      onStart: -> assert.notProperty component._tweenState, 'test'
+      onComplete: ->
+        assertState test: 1
+        component.state = test: 0
+        TweenLite.to component, 0.01,
+          state: {test: 1}
+          immediateRender: true
+          onStart: -> assertState test: 0
+          onComplete: -> done assertState test: 1
 
   it 'tweens from a state to a state', (done) ->
     TweenLite.fromTo component, 0.01, {state: test: 0},
       state: {test: 1}
-      onStart: -> assertStartState test: 0
-      onComplete: -> assertEndState test: 1, done
+      onStart: -> assertState test: 0
+      onComplete: -> done assertState test: 1
