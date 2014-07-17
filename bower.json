@@ -1,6 +1,6 @@
 {
   "name": "gsap-react-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A GSAP plugin for tweening React.js component state.",
   "main": "gsap-react-plugin.js",
   "keywords": [

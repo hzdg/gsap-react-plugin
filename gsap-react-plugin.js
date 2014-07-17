@@ -8,35 +8,35 @@ window._gsQueue.push(function() {
   return window._gsDefine.plugin({
     propName: 'state',
     API: 2,
-    version: '1.0.0',
+    version: '1.0.2',
     init: function(target, value, tween) {
-      var end, p, start, _ref, _ref1, _ref2, _ref3;
+      var end, p, start, _ref, _ref1, _ref2;
       if (typeof target.setState !== 'function') {
         return false;
       }
-      this._target = target;
-      this._proxy = target._tweenState != null ? target._tweenState : target._tweenState = {};
-      _ref = [{}, {}], this._start = _ref[0], this._end = _ref[1];
+      if (target._tweenState == null) {
+        target._tweenState = {};
+      }
+      this._tween = {};
       for (p in value) {
         if (!__hasProp.call(value, p)) continue;
-        this._end[p] = end = value[p];
-        this._start[p] = start = (_ref1 = this._proxy[p]) != null ? _ref1 : this._proxy[p] = (_ref2 = (_ref3 = target.state) != null ? _ref3[p] : void 0) != null ? _ref2 : end;
-        this._addTween(this._proxy, p, start, end, p);
+        end = value[p];
+        start = (_ref = (_ref1 = (_ref2 = target.state) != null ? _ref2[p] : void 0) != null ? _ref1 : target._tweenState[p]) != null ? _ref : end;
+        this._tween[p] = start;
+        this._addTween(this._tween, p, start, end, p);
       }
+      this._target = target;
       return true;
     },
     set: function(ratio) {
+      var k, v, _ref;
       this._super.setRatio.call(this, ratio);
-      return this._target.setState((function() {
-        switch (ratio) {
-          case 0:
-            return this._start;
-          case 1:
-            return this._end;
-          default:
-            return this._proxy;
-        }
-      }).call(this));
+      _ref = this._tween;
+      for (k in _ref) {
+        v = _ref[k];
+        this._target._tweenState[k] = v;
+      }
+      return this._target.setState(this._tween);
     }
   });
 });
