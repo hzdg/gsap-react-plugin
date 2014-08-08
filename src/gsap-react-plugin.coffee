@@ -52,3 +52,31 @@ window._gsQueue.push ->
       @_target.setState @_tween
 
 if window._gsDefine then window._gsQueue.pop()()
+
+globals = -> (window.GreenSockGlobals || window)
+getTweenClass = ->
+  {TweenMax, TweenLite} = globals()
+  TweenMax or TweenLite
+getTimelineClass = ->
+  {TimelineMax, TimelineLite} = globals()
+  TimelineMax or TimelineLite
+
+mod =
+  TweenMixin:
+    createTimeline: (args...) ->
+      cls = getTimelineClass()
+      new cls args...
+    createTween: (args...) ->
+      cls = getTweenClass()
+      new cls args...
+    tweenTo: (args...) -> getTweenClass().to this, args...; this
+    tweenFrom: (args...) -> getTweenClass().from this, args...; this
+    tweenFromTo: (args...) -> getTweenClass().fromTo this, args...; this
+    componentWillUnmount: -> getTweenClass().killTweensOf this; this
+
+if typeof define is 'function' and define.amd
+  define => @gsapReactPlugin = mod
+else if typeof module is 'object' and module.exports
+  module.exports = mod
+else
+  @gsapReactPlugin = mod
