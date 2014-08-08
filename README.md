@@ -18,6 +18,9 @@ React.createClass({
     componentDidMount: function() {
         TweenLite.to(this, 1, {state: {width: 100}});
     },
+    componentWillUnmount: function() {
+        TweenLite.killTweensOf(this);
+    },
     render: function() {
         return <div style={{width: this.state.width}}>Hello World!</div>
     }
